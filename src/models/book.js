@@ -1,5 +1,20 @@
 var mongoose = require('mongoose');
 
+const authorSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: true,
+        trim: true
+    },
+    birthday: {
+        type: Date,
+        required: true,
+        min: '1900-01-01',
+        max: '2021-01-01'
+    },
+});
+
+
 //Todo model
 const bookSchema = new mongoose.Schema({
     isbn: {
@@ -13,24 +28,26 @@ const bookSchema = new mongoose.Schema({
         required: true,
         trim: true
     },
-    authors: [{
-        type: mongoose.Schema.Types.ObjectId,
+    authors: {
+        type: [authorSchema],
         required: true,
-        ref: 'Author'
-    }],
+        validate: (value) => {
+            if (value.length > 0)  throw new Error ('Please enter at least 1 author.')
+        }
+    },
     year: {
         type: String,
         required: true,
         trim: true,
-         validate(value) {
-            if (value.match(/^-?[1-9]\d*$/))  throw new Error('Please enter a valid Year.')
+        validate: (value) => {
+            if (!value.match(/^-?[1-9]\d*$/))  throw new Error('Please enter a valid Year.')
         }
     },
     price: {
         type: Number,
         required: true,
         trim: true,
-        validate(value) {
+        validate: (value) => {
             if (value < 0)  throw new Error('Price must be more than $0.00')
         }
     },
@@ -42,6 +59,12 @@ const bookSchema = new mongoose.Schema({
 }, {
     timestamps: true
 })
+
+
+
+
+
+
 
 const Book = mongoose.model('Book', bookSchema)
 

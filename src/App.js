@@ -1,15 +1,15 @@
 const express = require('express');
-require('./db/mongoose')
+require('./database/mongoose')
 const app = express();
 
-// let taskRoute = require('./routers/taskRoute');
+ let bookRoute = require('./routers/bookRoute');
 // let userRoute = require('./routers/userRoute');
 
 // Middleware
 app.use(express.json());
 
 // Routes
-//app.use('/tasks', taskRoute);
+app.use('/books', bookRoute);
 //app.use('/users', userRoute);
 
 module.exports = app;
