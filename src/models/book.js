@@ -30,9 +30,8 @@ const bookSchema = new mongoose.Schema({
     },
     authors: {
         type: [authorSchema],
-        required: true,
         validate: (value) => {
-            if (value.length > 0)  throw new Error ('Please enter at least 1 author.')
+            if (value.length < 1)  throw new Error('Please enter at least 1 Author.')
         }
     },
     year: {

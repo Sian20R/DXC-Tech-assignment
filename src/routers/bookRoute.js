@@ -19,4 +19,33 @@ router.post('/', async (req, res) => {
     }
 });
 
+
+router.patch('/:id', async (req, res) => {
+    const updates = Object.keys(req.body)
+    const allowedUpdates = ['title', 'authors', 'year', 'price', 'genre'];
+
+
+    const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
+
+    if (!isValidOperation) {
+        return res.status(400).send({ error: 'Invalid updates!' })
+    }
+
+    try {
+        const book = await Book.findOne({ _id: ObjectID(req.params.id)})
+        console.log(req.body);
+
+        if (!book) {
+            return res.status(404).send('Cannot find book');
+        }
+
+        updates.forEach((update) => book[update] = req.body[update])
+        await book.save()
+        res.send(book)
+    } catch (e) {
+        res.status(400).send(e)
+    }
+});
+
+
 module.exports = router;
